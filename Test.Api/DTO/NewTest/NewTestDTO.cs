@@ -5,4 +5,5 @@ public class NewTestDTO
     public string TestName { get; set; }
     public string Content { get; set; }
     public List<NewQuestionDTO> Questions { get; set; }
+    public string Description { get; set; }
 }

@@ -1,13 +1,28 @@
+using Test.Api.Brokers;
+using Test.Api.Data;
 using Test.Api.DTO;
 using Test.Api.DTO.Test;
 
 namespace Test.Api.Services;
 
-public class TestService : ITestService
+public partial class TestService : ITestService
 {
-    public ValueTask<TestDetails> CreateTest(NewTestDTO test)
+    private readonly IStorageBroker storageBroker;
+
+    public TestService(IStorageBroker storageBroker)
     {
-        throw new NotImplementedException();
+        this.storageBroker = storageBroker;
+    }
+    public async ValueTask<TestDetails> CreateTest(NewTestDTO test)
+    {
+       var result= await storageBroker.InsertTestAsync(ToEntity(test));
+       return new TestDetails
+       {
+           TestId = result.Id,
+           numberOfQuestion = result.Questions.Count(),
+           Name = result.Name,
+           Description=result.Description
+       };
     }
 
     public ValueTask<IList<TestDetails>> GetLastTestList(int page = 1, int limit = 10)
