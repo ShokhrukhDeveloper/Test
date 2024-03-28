@@ -38,9 +38,16 @@ public partial class ExaminerService : IExaminerService
        };
     }
 
-    public async ValueTask<CheckedAnswerDTO> CheckTest(CheckTestDTO checkTestDto)
+    public async ValueTask<Result<CheckedAnswerDTO>> CheckTest(CheckTestDTO checkTestDto)
     {
         var result =  await  storageBroker.GetResultById(checkTestDto.CheckerId);
+        if (result == null)
+        {
+            return new(false)
+            {
+                ErrorMessage = "Test natijasini tekshirishda xatolik yuz siz uchun test yaratilmagan"
+            };
+        }
         var test = await storageBroker.GetByIdTestAsync(result.TestId);
         int correctAnswer = 0;
         List<Answer> answers = new List<Answer>();
@@ -70,13 +77,15 @@ public partial class ExaminerService : IExaminerService
                         SelectedOpion = new OptionResult()
                         {
                           Id = userOption.Id,
-                          Content = userOption.Content
+                          Content = userOption.Content,
+                          Correct = userOption.Correct
                         },
                         CorrectOpionId = correctOption.Id,
                         CorrectOpion =  new OptionResult()
                         {
                             Content = correctOption.Content,
-                            Id = correctOption.Id
+                            Id = correctOption.Id,
+                            Correct = correctOption.Correct
                         }
                     });
                     if (userOption.Correct)correctAnswer++;
@@ -85,25 +94,29 @@ public partial class ExaminerService : IExaminerService
 
             result.Score = (int)(((double) correctAnswer / (double)answers.Count())* 100);
             
-            storageBroker.GetAllAnswer().AddRange(answers);
-            await  storageBroker.SaveChangesAsync();
+            //storageBroker.GetAllAnswer().AddRange(answers);
+            //await  storageBroker.SaveChangesAsync();
             result.Answers = answers;
             result.CompletedAt=DateTime.Now;
             result =  await  storageBroker.UpdateResult(result);
             
         }
 
-        return new CheckedAnswerDTO()
+        return new(true)
         {
-            Result = new DTO.CheckTest.Result()
+            Data = new CheckedAnswerDTO()
             {
-              CompletedAt  = result.CompletedAt,
-              StartedAt = result.StartedAt,
-              Score = result.Score,
-              CorrectAnswer = correctAnswer,
-              InCorrectAnswer = answers.Count()-correctAnswer
-            },
-            QuestionResults = questionResults
+                
+                Result = new DTO.CheckTest.Result()
+                {
+                    CompletedAt = result.CompletedAt,
+                    StartedAt = result.StartedAt,
+                    Score = result.Score,
+                    CorrectAnswer = correctAnswer,
+                    InCorrectAnswer = answers.Count() - correctAnswer
+                },
+                QuestionResults = questionResults
+            }
         };
     }
-}
+    }
