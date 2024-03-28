@@ -4,5 +4,9 @@ namespace Test.Api.Brokers;
 
 public partial interface IStorageBroker
 {
-    // ValueTask<Answer>
+    ValueTask<Answer> CreateAnswer(Answer answer);
+    ValueTask<Answer> UpdateAnswer(Answer answer);
+    ValueTask<Answer> RemoveAnswer(Answer answer);
+    ValueTask<Answer> GetAnswerById(int id);
+    IQueryable<Answer> GetAllAnswer();
 }
