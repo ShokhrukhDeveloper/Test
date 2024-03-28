@@ -6,4 +6,5 @@ public class Option
     public int QuestionId { get; set; }
     public string Content { get; set; }
     public bool Correct { get; set; }
+    public virtual  Question? Question { get; set; }
 }

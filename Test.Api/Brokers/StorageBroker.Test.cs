@@ -4,7 +4,7 @@ public partial class StorageBroker
 {
     public ValueTask<Entities.Test> InsertTestAsync(Entities.Test test)
     {
-        var Test =_dbContext.Tests.Add(test);
+        _dbContext.Tests.Add(test);
         throw new NotImplementedException();
     }
 
