@@ -8,4 +8,5 @@ public class Question
     public string Content { get; set; }
     public string? Image { get; set; }
     public virtual ICollection<Option>? Options { get; set; }
+    public virtual ICollection<Answer>? Answers { get; set; }
 } 

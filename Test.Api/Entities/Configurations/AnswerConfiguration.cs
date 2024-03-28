@@ -17,6 +17,11 @@ public class AnswerConfiguration: EntityBaseConfiguration<Answer>
         builder.Property(b => b.QuestionId).IsRequired(true);
         builder.Property(b => b.CorrectOpionId).IsRequired(true);
         builder.Property(b => b.SelectedOpionId).IsRequired(true);
-        
+        builder.HasOne<Result>(q => q.Result).WithMany(e => e.Answers).HasForeignKey(k => k.ResultId);
+        // builder.HasOne<Option>(q => q.SelectedOpion).WithMany(e => e.Answers).HasForeignKey(k => k.SelectedOpionId);
+        // builder.HasOne<Option>(q => q.CorrectOpion).WithMany(e => e.Answers).HasForeignKey(k => k.CorrectOpionId);
+        builder.HasOne<Question>(q => q.Question).WithMany(e => e.Answers).HasForeignKey(k => k.QuestionId);
+        builder.HasOne<Test>(q => q.Test).WithMany(e => e.Answers).HasForeignKey(k => k.TestId);
+
     }  
 }

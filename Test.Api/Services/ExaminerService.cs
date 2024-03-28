@@ -53,8 +53,7 @@ public partial class ExaminerService : IExaminerService
             if (userOption!=null)
             {
 
-                if (correctOption!=null)
-                {
+                    if (userOption.Correct)correctAnswer++;
                     answers.Add(new Answer()
                     {
                        TestId = test.Id,
@@ -62,10 +61,11 @@ public partial class ExaminerService : IExaminerService
                        SelectedOpionId = userOption.Id,
                        QuestionId = userOption.Id,
                        CorrectOpionId = correctOption.Id,
-                       Correct = correctOption.Correct
+                       Correct = userOption.Correct
                     });
                     questionResults.Add(new QuestionResult()
                     {
+                        Id = question.Id,
                         Correct = userOption.Correct,
                         SelectedOpion = new OptionResult()
                         {
@@ -79,18 +79,19 @@ public partial class ExaminerService : IExaminerService
                             Id = correctOption.Id
                         }
                     });
-                    if (userOption.Correct)correctAnswer++;
-                }
+                    
+               
             }
 
             result.Score = (int)(((double) correctAnswer / (double)answers.Count())* 100);
             
-            storageBroker.GetAllAnswer().AddRange(answers);
-            await  storageBroker.SaveChangesAsync();
-            result.Answers = answers;
+            
+            
             result.CompletedAt=DateTime.Now;
+            storageBroker.GetAllAnswer().AddRange(answers);
             result =  await  storageBroker.UpdateResult(result);
             
+            // await  storageBroker.SaveChangesAsync();
         }
 
         return new CheckedAnswerDTO()
