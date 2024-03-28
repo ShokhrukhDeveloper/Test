@@ -1,10 +1,18 @@
+using Test.Api.Brokers;
 using Test.Api.DTO;
+using Test.Api.Entities;
 
 namespace Test.Api.Services;
 
 public class ExaminerService : IExaminerService
 {
-    public ValueTask<DTO.Test.Test> StartTest(int userId, int testId, int numberOfTest)
+    private readonly IStorageBroker storageBroker;
+
+    public ExaminerService(IStorageBroker storageBroker)
+    {
+        this.storageBroker = storageBroker;
+    }
+    public ValueTask<DTO.Test.Test> StartTest(int userId, int testId, int? numberOfTest=null)
     {
         throw new NotImplementedException();
     }
