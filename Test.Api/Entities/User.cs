@@ -6,5 +6,5 @@ public class User
     public string FullName { get; set; }
     public string Phone { get; set; }
     public double Score { get; set; }
-    public ICollection<Result> Results { get; set; }
+    public virtual ICollection<Result>? Results { get; set; }
 }

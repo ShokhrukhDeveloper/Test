@@ -8,5 +8,7 @@ public class Result
     public int UserId { get; set; }
     public virtual  User User { get; set; }
     public  int Score { get; set; }
-    public DateTime CompletedAt { get; set; }
+    public virtual ICollection<Answer>? Answers { get; set; }
+    public DateTime StartedAt { get; set; }
+    public DateTime? CompletedAt { get; set; }
 }

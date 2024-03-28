@@ -42,7 +42,7 @@ public partial class TestService
         if (test.Questions != null)
             return new()
             {
-                Id = test.Id,
+                TestId = test.Id,
                 Name = test.Name,
                 Description = test.Description,
                 Questions = test.Questions.Select(ToDTO).ToList()

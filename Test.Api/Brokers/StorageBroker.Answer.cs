@@ -28,8 +28,7 @@ public partial class StorageBroker
 
     public async ValueTask<Answer> GetAnswerById(int id)
         => await _dbContext.Answers.FirstOrDefaultAsync(i=>i.Id==id);
-
-
-    public IQueryable<Answer> GetAllAnswer()
+    
+    public DbSet<Answer> GetAllAnswer()
         => _dbContext.Answers;
 }

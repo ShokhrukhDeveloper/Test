@@ -17,5 +17,6 @@ public class AnswerConfiguration: EntityBaseConfiguration<Answer>
         builder.Property(b => b.QuestionId).IsRequired(true);
         builder.Property(b => b.CorrectOpionId).IsRequired(true);
         builder.Property(b => b.SelectedOpionId).IsRequired(true);
+        
     }  
 }

@@ -9,5 +9,8 @@ public partial class StorageBroker : IStorageBroker
     public StorageBroker(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
-    } 
+    }
+
+    public async ValueTask<int> SaveChangesAsync()
+        =>await _dbContext.SaveChangesAsync();
 }

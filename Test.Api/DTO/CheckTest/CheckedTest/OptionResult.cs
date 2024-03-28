@@ -1,6 +1,6 @@
 namespace Test.Api.DTO.CheckTest;
 
-public class Option
+public class OptionResult
 {
     public int Id { get; set; }
     public string Content { get; set; }
