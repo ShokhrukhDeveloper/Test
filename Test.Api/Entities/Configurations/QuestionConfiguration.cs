@@ -15,7 +15,6 @@ public class QuestionConfiguration : EntityBaseConfiguration<Question>
         builder.Property(b => b.TestId).IsRequired(true);
         builder.Property(b => b.Content).HasMaxLength(1023).IsRequired(true);
         builder.Property(b => b.Image).IsRequired(false);
-        builder.Property(b => b.TimeAllowed).IsRequired();
         builder.HasMany<Option>(b => b.Options).WithOne(b => b.Question).HasForeignKey(e => e.QuestionId);
     }
 }

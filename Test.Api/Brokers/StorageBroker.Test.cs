@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Test.Api.Entities;
 
 namespace Test.Api.Brokers;
 
@@ -27,7 +28,7 @@ public partial class StorageBroker
     }
 
     public async ValueTask<Entities.Test> GetByIdTestAsync(int id)
-        => await _dbContext.Tests.FirstOrDefaultAsync(t => t.Id == id);
+        => await _dbContext.Tests.Include(e=>e.Questions).ThenInclude(q=>q.Options).FirstOrDefaultAsync(t => t.Id == id);
      
 
     public IQueryable<Entities.Test> GetAllTest()

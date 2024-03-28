@@ -77,9 +77,6 @@ namespace Test.Api.Migrations
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TimeAllowed")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TestId");
@@ -127,6 +124,9 @@ namespace Test.Api.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("TimeAllowed")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

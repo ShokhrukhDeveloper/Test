@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Test.Api.Brokers;
 using Test.Api.Data;
 using Test.Api.DTO;
@@ -25,8 +26,36 @@ public partial class TestService : ITestService
        };
     }
 
-    public ValueTask<IList<TestDetails>> GetLastTestList(int page = 1, int limit = 10)
+    public async ValueTask<IList<TestDetails>> GetLastTestList(int page = 1, int limit = 10)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var result = await storageBroker.GetAllTest().OrderByDescending(e => e.Id).Take(limit).ToListAsync();
+            return result.Select(ToTestDetails).ToList();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async ValueTask<DTO.Test.Test> GetLastTestByIdAsync(int id)
+    {
+        try
+        {
+            var result = await storageBroker.GetByIdTestAsync(id);
+            if (result is null)
+            {
+                return new DTO.Test.Test();
+            }
+
+            return ToDTO(result);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

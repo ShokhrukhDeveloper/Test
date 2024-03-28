@@ -14,14 +14,21 @@ public class TestController : ControllerBase
         _testService = testService;
     }
     [HttpGet]
-    public IActionResult GetTestList()
+    public async Task<ActionResult<IList<TestDetails>>> GetTestList()
     {
-        return Ok();
+       var result= await _testService.GetLastTestList();
+        return Ok(result);
     }
     [HttpPost]
     public async Task<ActionResult<TestDetails>> InsertTest(NewTestDTO testDto)
     {
         var test = await _testService.CreateTest(testDto);   
         return Ok(test);
+    }
+    [HttpGet("{id}")]
+    public async Task<ActionResult<DTO.Test.Test>> GetTest(int id)
+    {
+        var result= await _testService.GetLastTestByIdAsync(id);
+        return Ok(result);
     }
 }
