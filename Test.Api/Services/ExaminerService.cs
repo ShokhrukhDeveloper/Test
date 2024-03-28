@@ -17,7 +17,7 @@ public class ExaminerService : IExaminerService
         throw new NotImplementedException();
     }
 
-    public ValueTask<CheckedResult> CheckTest(CheckTestDTO checkTestDto)
+    public ValueTask<CheckedResultDTO> CheckTest(CheckTestDTO checkTestDto)
     {
         throw new NotImplementedException();
     }
