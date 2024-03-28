@@ -13,7 +13,7 @@ builder.Services.AddScoped<ITestService,TestService>();
 builder.Services.AddScoped<IExaminerService,ExaminerService>();
 builder.Services.AddScoped<ICredentialService,CredentialService>();
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
