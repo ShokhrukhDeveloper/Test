@@ -50,7 +50,6 @@ public partial class ExaminerService : IExaminerService
         }
         var test = await storageBroker.GetByIdTestAsync(result.TestId);
         int correctAnswer = 0;
-        List<Answer> answers = new List<Answer>();
         List<QuestionResult> questionResults = new List<QuestionResult>();
         foreach (var question in test.Questions)
         {
@@ -62,14 +61,12 @@ public partial class ExaminerService : IExaminerService
 
                 if (correctOption!=null)
                 {
-                    answers.Add(new Answer()
+                    storageBroker.GetAllAnswer().Add(new Answer()
                     {
-                       TestId = test.Id,
-                       ResultId = result.Id,
-                       SelectedOpionId = userOption.Id,
-                       QuestionId = userOption.Id,
-                       CorrectOpionId = correctOption.Id,
-                       Correct = correctOption.Correct
+                        ResultId = result.Id,
+                        OpionId = userOption.Id,
+                        QuestionId = question.Id,
+                        Correct = correctOption.Correct
                     });
                     questionResults.Add(new QuestionResult()
                     {
@@ -92,13 +89,10 @@ public partial class ExaminerService : IExaminerService
                 }
             }
 
-            result.Score = (int)(((double) correctAnswer / (double)answers.Count())* 100);
-            
-            //storageBroker.GetAllAnswer().AddRange(answers);
-            //await  storageBroker.SaveChangesAsync();
-            result.Answers = answers;
+            result.Score = (int)(((double) correctAnswer / (double)checkTestDto.Answers.Count()));
             result.CompletedAt=DateTime.Now;
             result =  await  storageBroker.UpdateResult(result);
+            await  storageBroker.SaveChangesAsync();
             
         }
 
@@ -106,14 +100,13 @@ public partial class ExaminerService : IExaminerService
         {
             Data = new CheckedAnswerDTO()
             {
-                
                 Result = new DTO.CheckTest.Result()
                 {
                     CompletedAt = result.CompletedAt,
                     StartedAt = result.StartedAt,
                     Score = result.Score,
                     CorrectAnswer = correctAnswer,
-                    InCorrectAnswer = answers.Count() - correctAnswer
+                    InCorrectAnswer =checkTestDto.Answers.Count() - correctAnswer
                 },
                 QuestionResults = questionResults
             }

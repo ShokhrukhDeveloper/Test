@@ -26,7 +26,7 @@ namespace Test.Api.Migrations
                     b.Property<bool>("Correct")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("CorrectOpionId")
+                    b.Property<int>("OpionId")
                         .HasColumnType("integer");
 
                     b.Property<int>("QuestionId")
@@ -35,23 +35,13 @@ namespace Test.Api.Migrations
                     b.Property<int>("ResultId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SelectedOpionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("TestId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CorrectOpionId");
+                    b.HasIndex("OpionId");
 
                     b.HasIndex("QuestionId");
 
                     b.HasIndex("ResultId");
-
-                    b.HasIndex("SelectedOpionId");
-
-                    b.HasIndex("TestId");
 
                     b.ToTable("Answers");
                 });
@@ -84,17 +74,19 @@ namespace Test.Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
-                    b.Property<int>("PasswordHash")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("char(64)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Passwords");
                 });
@@ -107,11 +99,11 @@ namespace Test.Api.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(1023)
+                        .HasMaxLength(2024)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Image")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
@@ -161,8 +153,7 @@ namespace Test.Api.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1023)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(2048)");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -185,7 +176,7 @@ namespace Test.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(64)");
 
                     b.Property<double>("Score")
                         .HasColumnType("REAL");
@@ -197,9 +188,9 @@ namespace Test.Api.Migrations
 
             modelBuilder.Entity("Test.Api.Entities.Answer", b =>
                 {
-                    b.HasOne("Test.Api.Entities.Option", "CorrectOpion")
+                    b.HasOne("Test.Api.Entities.Option", "Opion")
                         .WithMany()
-                        .HasForeignKey("CorrectOpionId")
+                        .HasForeignKey("OpionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -215,27 +206,11 @@ namespace Test.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Test.Api.Entities.Option", "SelectedOpion")
-                        .WithMany()
-                        .HasForeignKey("SelectedOpionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Test.Api.Entities.Test", "Test")
-                        .WithMany()
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CorrectOpion");
+                    b.Navigation("Opion");
 
                     b.Navigation("Question");
 
                     b.Navigation("Result");
-
-                    b.Navigation("SelectedOpion");
-
-                    b.Navigation("Test");
                 });
 
             modelBuilder.Entity("Test.Api.Entities.Option", b =>
@@ -252,8 +227,8 @@ namespace Test.Api.Migrations
             modelBuilder.Entity("Test.Api.Entities.Password", b =>
                 {
                     b.HasOne("Test.Api.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Password")
+                        .HasForeignKey("Test.Api.Entities.Password", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -309,6 +284,8 @@ namespace Test.Api.Migrations
 
             modelBuilder.Entity("Test.Api.Entities.User", b =>
                 {
+                    b.Navigation("Password");
+
                     b.Navigation("Results");
                 });
 #pragma warning restore 612, 618

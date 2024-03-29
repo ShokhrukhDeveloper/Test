@@ -13,8 +13,8 @@ public class QuestionConfiguration : EntityBaseConfiguration<Question>
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
         builder.Property(b => b.TestId).IsRequired(true);
-        builder.Property(b => b.Content).HasMaxLength(1023).IsRequired(true);
-        builder.Property(b => b.Image).IsRequired(false);
-        builder.HasMany<Option>(b => b.Options).WithOne(b => b.Question).HasForeignKey(e => e.QuestionId);
+        builder.Property(b => b.Content).HasMaxLength(2024).IsRequired(true);
+        builder.Property(b => b.Image).HasColumnType("varchar(255)");
+        builder.HasMany<Option>(b => b.Options).WithOne(b => b.Question).HasForeignKey(e => e.QuestionId).OnDelete(DeleteBehavior.Cascade);;
     }
 }

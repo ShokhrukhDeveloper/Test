@@ -13,6 +13,6 @@ public class OptionConfiguration : EntityBaseConfiguration<Option>
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
         builder.Property(b => b.Content).HasMaxLength(255).IsRequired(true);
-        builder.HasOne<Question>(e => e.Question).WithMany(e => e.Options).HasForeignKey(k => k.QuestionId);
+        builder.HasOne<Question>(e => e.Question).WithMany(e => e.Options).HasForeignKey(k => k.QuestionId).OnDelete(DeleteBehavior.Cascade);;
     }
 }

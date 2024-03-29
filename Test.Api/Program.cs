@@ -32,14 +32,12 @@ builder.Services.AddScoped<ICredentialService,CredentialService>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
 builder.Services.AddDbContext<ApplicationDbContext>(
     options=>options.UseSqlite(connectionString));
-
 var app = builder.Build();
 if (app.Environment.IsDevelopment()||app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

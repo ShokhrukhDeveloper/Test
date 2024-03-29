@@ -18,7 +18,8 @@ namespace Test.Api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 1023, nullable: false)
+                    Description = table.Column<string>(type: "TEXT", maxLength: 1023, nullable: false),
+                    TimeAllowed = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,7 +33,7 @@ namespace Test.Api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FullName = table.Column<string>(type: "TEXT", nullable: true),
-                    Phone = table.Column<string>(type: "TEXT", nullable: true),
+                    Phone = table.Column<string>(type: "varchar(64)", nullable: true),
                     Score = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
@@ -47,9 +48,8 @@ namespace Test.Api.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     TestId = table.Column<int>(type: "integer", nullable: false),
-                    Content = table.Column<string>(type: "TEXT", maxLength: 1023, nullable: false),
-                    TimeAllowed = table.Column<int>(type: "INTEGER", nullable: false),
-                    Image = table.Column<string>(type: "TEXT", nullable: true)
+                    Content = table.Column<string>(type: "TEXT", maxLength: 2024, nullable: false),
+                    Image = table.Column<string>(type: "varchar(255)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,10 +66,10 @@ namespace Test.Api.Migrations
                 name: "Passwords",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    PasswordHash = table.Column<int>(type: "INTEGER", nullable: false)
+                    PasswordHash = table.Column<string>(type: "char(64)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,7 +91,8 @@ namespace Test.Api.Migrations
                     TestId = table.Column<int>(type: "integer", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     Score = table.Column<int>(type: "INTEGER", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    StartedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CompletedAt = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -131,6 +132,55 @@ namespace Test.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Answers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ResultId = table.Column<int>(type: "integer", nullable: false),
+                    QuestionId = table.Column<int>(type: "integer", nullable: false),
+                    OpionId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SelectedOpionId = table.Column<int>(type: "integer", nullable: true),
+                    Correct = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Answers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Answers_Options_SelectedOpionId",
+                        column: x => x.SelectedOpionId,
+                        principalTable: "Options",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Answers_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Answers_Results_ResultId",
+                        column: x => x.ResultId,
+                        principalTable: "Results",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_QuestionId",
+                table: "Answers",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_ResultId",
+                table: "Answers",
+                column: "ResultId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_SelectedOpionId",
+                table: "Answers",
+                column: "SelectedOpionId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Options_QuestionId",
                 table: "Options",
@@ -139,7 +189,8 @@ namespace Test.Api.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Passwords_UserId",
                 table: "Passwords",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_TestId",
@@ -161,10 +212,13 @@ namespace Test.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Options");
+                name: "Answers");
 
             migrationBuilder.DropTable(
                 name: "Passwords");
+
+            migrationBuilder.DropTable(
+                name: "Options");
 
             migrationBuilder.DropTable(
                 name: "Results");

@@ -30,6 +30,6 @@ public partial class StorageBroker
         => await _dbContext.Results.FirstOrDefaultAsync(e=>e.Id==id);
      
 
-    public IQueryable<Result> GetAllResults()
+    public DbSet<Result> GetAllResults()
         => _dbContext.Results;
 }

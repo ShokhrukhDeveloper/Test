@@ -11,9 +11,11 @@ public class TestConfiguration: EntityBaseConfiguration<Test>
         builder.Property(b => b.Id)
             .HasColumnType("integer")
             .ValueGeneratedOnAdd();
-        
-        builder.Property(p => p.Description).HasMaxLength(1023).IsRequired();
-        builder.HasMany<Question>(q => q.Questions).WithOne(e => e.Test).HasForeignKey(k => k.TestId);
+        builder.Property(p => p.Description).HasColumnType("varchar(2048)").IsRequired();
+        builder.HasMany<Question>(q => q.Questions).
+            WithOne(e => e.Test).
+            HasForeignKey(k => k.TestId).
+            OnDelete(DeleteBehavior.Cascade);;
 
     }
 }

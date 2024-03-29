@@ -11,7 +11,7 @@ using Test.Api.Data;
 namespace Test.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240328045649_initial")]
+    [Migration("20240328230529_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -19,6 +19,38 @@ namespace Test.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
+
+            modelBuilder.Entity("Test.Api.Entities.Answer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Correct")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("OpionId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ResultId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("SelectedOpionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("ResultId");
+
+                    b.HasIndex("SelectedOpionId");
+
+                    b.ToTable("Answers");
+                });
 
             modelBuilder.Entity("Test.Api.Entities.Option", b =>
                 {
@@ -48,17 +80,19 @@ namespace Test.Api.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
-                    b.Property<int>("PasswordHash")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("char(64)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Passwords");
                 });
@@ -71,17 +105,14 @@ namespace Test.Api.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(1023)
+                        .HasMaxLength(2024)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Image")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
-
-                    b.Property<int>("TimeAllowed")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -96,11 +127,14 @@ namespace Test.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CompletedAt")
+                    b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Score")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TestId")
                         .HasColumnType("integer");
@@ -131,6 +165,9 @@ namespace Test.Api.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TimeAllowed")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.ToTable("Tests");
@@ -146,7 +183,7 @@ namespace Test.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("varchar(64)");
 
                     b.Property<double>("Score")
                         .HasColumnType("REAL");
@@ -154,6 +191,31 @@ namespace Test.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Test.Api.Entities.Answer", b =>
+                {
+                    b.HasOne("Test.Api.Entities.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Test.Api.Entities.Result", "Result")
+                        .WithMany("Answers")
+                        .HasForeignKey("ResultId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Test.Api.Entities.Option", "SelectedOpion")
+                        .WithMany()
+                        .HasForeignKey("SelectedOpionId");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Result");
+
+                    b.Navigation("SelectedOpion");
                 });
 
             modelBuilder.Entity("Test.Api.Entities.Option", b =>
@@ -170,8 +232,8 @@ namespace Test.Api.Migrations
             modelBuilder.Entity("Test.Api.Entities.Password", b =>
                 {
                     b.HasOne("Test.Api.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne("Password")
+                        .HasForeignKey("Test.Api.Entities.Password", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -213,6 +275,11 @@ namespace Test.Api.Migrations
                     b.Navigation("Options");
                 });
 
+            modelBuilder.Entity("Test.Api.Entities.Result", b =>
+                {
+                    b.Navigation("Answers");
+                });
+
             modelBuilder.Entity("Test.Api.Entities.Test", b =>
                 {
                     b.Navigation("Questions");
@@ -222,6 +289,8 @@ namespace Test.Api.Migrations
 
             modelBuilder.Entity("Test.Api.Entities.User", b =>
                 {
+                    b.Navigation("Password");
+
                     b.Navigation("Results");
                 });
 #pragma warning restore 612, 618
