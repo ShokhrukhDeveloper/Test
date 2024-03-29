@@ -38,7 +38,7 @@ public partial class ExaminerService : IExaminerService
        };
     }
 
-    public async ValueTask<Result<CheckedAnswerDTO>> CheckTest(CheckTestDTO checkTestDto)
+    public async ValueTask<ResultService<CheckedAnswerDTO>> CheckTest(CheckTestDTO checkTestDto)
     {
         var result =  await  storageBroker.GetResultById(checkTestDto.CheckerId);
         if (result == null)

@@ -29,6 +29,10 @@ public partial class StorageBroker
     public async ValueTask<User> GetUserById(int id)
         => await _dbContext.Users.FirstOrDefaultAsync(e => e.Id == id);
 
+    public async ValueTask<Password> GetUserPasswordByPhoneNumber(string phone)
+        => (await _dbContext.Users.Include(e=>e.Password).FirstOrDefaultAsync(p=>p.Phone==phone))?.Password;
+   
+
     public DbSet<User> GetAllUser()
         => _dbContext.Users;
 }

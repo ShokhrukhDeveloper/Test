@@ -9,5 +9,6 @@ public partial interface IStorageBroker
     ValueTask<User> UpdateUser(User result);
     ValueTask<User> RemoveUser(User result);
     ValueTask<User> GetUserById(int id);
+    ValueTask<Password> GetUserPasswordByPhoneNumber(string phone);
     DbSet<User> GetAllUser();
 }
