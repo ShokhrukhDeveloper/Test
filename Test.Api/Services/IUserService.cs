@@ -11,6 +11,6 @@ public interface IUserService
    ValueTask<UserDetails> UpdateUser(User user);
    ValueTask<UserDetails> DeleteUser(User user);
    ValueTask<Session> LoginUser(LoginDTO login);
-   ValueTask<bool> UpdateUserPassword( login);
+   ValueTask<bool> UpdateUserPassword(int login);
    
 }
