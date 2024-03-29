@@ -1,27 +1,29 @@
 using Microsoft.AspNetCore.Mvc;
 using Test.Api.Data;
+using Test.Api.DTO;
+using Test.Api.DTO.User;
 using Test.Api.Entities;
+using Test.Api.Services;
 
 namespace Test.Api.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class UserController : Controller
 {
-    private readonly ApplicationDbContext _context;
-    public UserController(ApplicationDbContext context)
+    private readonly IUserService userService;
+    public UserController(IUserService userService)
     {
-        _context = context;
+        this.userService = userService;
     }
-    [HttpGet]
-    public IActionResult GetX()
+    [HttpPost]
+    public async  Task<ActionResult<ResultService<UserDetails>>> Create([FromBody]NewUser user)
     {
-      var res=  _context.Users.Add(new User()
+        var result = await this.userService.CreateUser(user);
+        if (result.IsSuccess)
         {
-            FullName = "jasfgjasldfghlasdg",
-            Phone = "+998997531097",
-            Score = 0.0f
-        });
-      _context.SaveChanges();
-        return Ok(res.Entity);
+            return Ok(result);
+        }
+        return BadRequest(result);
     }
+    
 }

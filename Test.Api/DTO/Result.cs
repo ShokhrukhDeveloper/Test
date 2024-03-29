@@ -1,26 +1,26 @@
 
 namespace Test.Api.DTO;
 
-public class Result
+public class ResultService
 {
     public bool IsSuccess { get; set; }
     public int CurrentPageIndex { get; set; }
     public int PageCount { get; set; }
     public string? ErrorMessage { get; set; }
-    public Result(bool isSuccess) => IsSuccess = isSuccess;
-    public Result(string? errorMessage) => ErrorMessage = errorMessage;
+    public ResultService(bool isSuccess) => IsSuccess = isSuccess;
+    public ResultService(string? errorMessage) => ErrorMessage = errorMessage;
 
-    public Result(bool isSuccess, string? errorMessage)
+    public ResultService(bool isSuccess, string? errorMessage)
     {
         IsSuccess = isSuccess;
         ErrorMessage = errorMessage;
     }
 }
 
-public class Result<T> : Result
+public class ResultService<T> : ResultService
 {
     public T? Data { get; set; }
-    public Result(bool isSuccess) : base(isSuccess) { }
-    public Result(string? errorMessage) : base(errorMessage) { }
-    public Result(bool isSuccess, string? errorMessage) : base(isSuccess, errorMessage) { }
+    public ResultService(bool isSuccess) : base(isSuccess) { }
+    public ResultService(string? errorMessage) : base(errorMessage) { }
+    public ResultService(bool isSuccess, string? errorMessage) : base(isSuccess, errorMessage) { }
 }

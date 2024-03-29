@@ -27,6 +27,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<IJWTService,JWTService>();
 builder.Services.AddScoped<IStorageBroker,StorageBroker>();
 builder.Services.AddScoped<ITestService,TestService>();
+builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IExaminerService,ExaminerService>();
 builder.Services.AddScoped<ICredentialService,CredentialService>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
