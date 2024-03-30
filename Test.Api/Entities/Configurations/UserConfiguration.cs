@@ -11,13 +11,12 @@ public class UserConfiguration : EntityBaseConfiguration<User>
         
         builder.Property(b => b.Id)
             .HasColumnType("integer");
-        
+        builder.HasIndex(b => b.Phone).
+            IsUnique();
         builder.Property(b => b.Phone)
             .HasColumnType("char(13)");
-       
-        builder.Property(b => b.Phone)
+        builder.Property(b => b.FullName)
             .HasColumnType("varchar(64)");
-        
         builder.HasMany<Result>(e => e.Results).
             WithOne(e => e.User).
             HasForeignKey(k => k.UserId).

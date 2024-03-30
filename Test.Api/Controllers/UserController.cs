@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Test.Api.Data;
 using Test.Api.DTO;
+using Test.Api.DTO.Credential;
 using Test.Api.DTO.User;
 using Test.Api.Entities;
 using Test.Api.Services;
@@ -25,5 +26,27 @@ public class UserController : Controller
         }
         return BadRequest(result);
     }
+    [HttpGet]
+    public async  Task<ActionResult<ResultService<UserDetails>>> Get()
+    {
+        var result = await this.userService.GetUserById(1);
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }
+    
+    [HttpPost("Login")]
+    public async  Task<ActionResult<ResultService<UserDetails>>> Login([FromBody]LoginDTO login)
+    {
+        var result = await this.userService.LoginUser(login);
+        if (result.IsSuccess)
+        {
+            return Ok(result);
+        }
+        return BadRequest(result);
+    }
+    
     
 }

@@ -130,6 +130,38 @@ public class UserService : IUserService
        
     }
 
+    public async ValueTask<ResultService<UserDetails>> GetUserById(int id)
+    {
+        try
+        {
+            var result = await storageBroker.GetUserById(id);
+            if (result is null)
+            {
+                return new ResultService<UserDetails>(false)
+                {
+                    ErrorMessage = "Foydalanuvchi topilmadi"
+                };
+            }
+
+            return new ResultService<UserDetails>(true)
+            {
+                Data = new UserDetails()
+                {
+                Id = result.Id,
+                FullName = result.FullName,
+                Phone = result.Phone,
+                Score = result.Score
+                }
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+        throw new NotImplementedException();
+    }
+
     public async ValueTask<ResultService<string>> ChangePasswordByUserId(int userId, string oldPassword, string newPassword)
     {
         try
@@ -166,8 +198,8 @@ public class UserService : IUserService
         }
         catch(Exception exception)
         {
-            
+            throw new Exception("Serverda xatolik yuz berdi");
         }
-        throw new NotImplementedException();
+        
     }
 }
