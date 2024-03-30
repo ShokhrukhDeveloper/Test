@@ -48,10 +48,11 @@ public class UserService : IUserService
             {
                 FullName = user.FullName,
                 Phone = user.Phone,
-                Password = new Password()
-                {
-                    PasswordHash = user.Password.ToSha256()
-                }
+            });
+            _ = await storageBroker.CreatePassword(new Password()
+            {
+                UserId = newUser.Id,
+                PasswordHash = user.Password.ToSha256()
             });
             return new ResultService<UserDetails>(true)
             {
@@ -76,7 +77,7 @@ public class UserService : IUserService
     {
         try
         {
-            
+             
         }
         catch (Exception e)
         {
@@ -147,10 +148,10 @@ public class UserService : IUserService
             {
                 Data = new UserDetails()
                 {
-                Id = result.Id,
-                FullName = result.FullName,
-                Phone = result.Phone,
-                Score = result.Score
+                    Id = result.Id,
+                    FullName = result.FullName,
+                    Phone = result.Phone,
+                    Score = result.Score
                 }
             };
         }
@@ -180,21 +181,21 @@ public class UserService : IUserService
                     ErrorMessage = $"Ushbu yang parol uzunligi kamida 4 belgidan iborat bo'lsin "
                 };
             }
-            var user = await storageBroker.GetAllUser().Include(e => e.Password).FirstOrDefaultAsync(w => w.Id == userId);
-            if (user.Password.PasswordHash!=oldPassword.ToSha256())
+            var password = await storageBroker.GetUserPasswordByUserId(userId);
+            if (password.PasswordHash!=oldPassword.ToSha256())
             {
-                return new ResultService<string>(false)
+             return new ResultService<string>(false)
                 {
                     ErrorMessage = "Eski parol noto'gri kiritilgan"
                 };
             }
 
-            user.Password.PasswordHash = newPassword.ToSha256();
-            storageBroker.UpdateUser(user);
+            password.PasswordHash = newPassword.ToSha256();
+                _ = await storageBroker.UpdateUserPassword(password);
             return new ResultService<string>(true)
-            {
-                Data = "Parol muvoffaqiyatli o'zgartirildi👌!"
-            };
+                {
+                    Data = "Parol muvoffaqiyatli o'zgartirildi👌!"
+                };
         }
         catch(Exception exception)
         {

@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Test.Api.Data;
 using Test.Api.DTO;
 using Test.Api.DTO.Credential;
 using Test.Api.DTO.User;
-using Test.Api.Entities;
 using Test.Api.Services;
 
 namespace Test.Api.Controllers;
@@ -26,6 +24,7 @@ public class UserController : Controller
         }
         return BadRequest(result);
     }
+    
     [HttpGet]
     public async  Task<ActionResult<ResultService<UserDetails>>> Get()
     {
