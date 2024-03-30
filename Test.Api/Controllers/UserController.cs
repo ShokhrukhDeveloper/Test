@@ -28,7 +28,7 @@ public class UserController : Controller
     [HttpGet]
     public async  Task<ActionResult<ResultService<UserDetails>>> Get()
     {
-        var result = await this.userService.GetUserById(1);
+        var result = await  userService.GetUserById(1);
         if (result.IsSuccess)
         {
             return Ok(result);
@@ -46,6 +46,4 @@ public class UserController : Controller
         }
         return BadRequest(result);
     }
-    
-    
 }
